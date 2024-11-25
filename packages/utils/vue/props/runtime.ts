@@ -1,5 +1,6 @@
 import { warn } from 'vue'
 import { fromPairs } from 'lodash-unified'
+import { requiredNumber } from '@element-plus/components/table-v2/src/common'
 import { isObject } from '../../types'
 import { hasOwn } from '../../objects'
 
@@ -101,18 +102,12 @@ export const buildProp = <
 export const buildProps = <
   Props extends Record<
     string,
-    | { [epPropKey]: true }
-    | NativePropType
-    | EpPropInput<any, any, any, any, any>
+    PropType<any> | EpPropInput<any, any, any, any, any>
   >
 >(
   props: Props
 ): {
-  [K in keyof Props]: IfEpProp<
-    Props[K],
-    Props[K],
-    IfNativePropType<Props[K], Props[K], EpPropConvert<Props[K]>>
-  >
+  [K in keyof Props]: B<Props[K]>
 } =>
   fromPairs(
     Object.entries(props).map(([key, option]) => [
@@ -120,3 +115,22 @@ export const buildProps = <
       buildProp(option as any, key),
     ])
   ) as any
+
+type B<Prop> = Prop extends PropType<infer Type>
+  ? PropType<Type>
+  : Prop extends { type: PropType<infer Type> }
+  ? Prop extends { required: true }
+    ? { type: PropType<Type>; required: true }
+    : { type: PropType<Type> }
+  : never
+
+type Test = {
+  readonly type: readonly [
+    StringConstructor,
+    NumberConstructor,
+    BooleanConstructor,
+    FunctionConstructor
+  ]
+} extends { type: PropType<infer Type> }
+  ? true
+  : false

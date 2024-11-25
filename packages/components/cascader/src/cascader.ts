@@ -1,3 +1,4 @@
+import { defineComponent } from 'vue'
 import { placements } from '@popperjs/core'
 import { CommonProps } from '@element-plus/components/cascader-panel'
 import { buildProps, definePropType, isBoolean } from '@element-plus/utils'
@@ -158,3 +159,34 @@ export const cascaderEmits = {
 // export type CascaderProps = ExtractPropTypes<typeof cascaderProps>
 
 export type CascaderEmits = typeof cascaderEmits
+
+const fooProps = buildProps({
+  valueOnClear: {
+    type: [String, Number, Boolean, Function] as const,
+  },
+  b: [String, Number, Boolean, Function] as const,
+})
+
+const a = {
+  type: [String, Number, Boolean, Function],
+  default: undefined,
+}
+const b = {
+  type: [String, Number, Boolean, Function],
+  default: undefined,
+} as const
+
+defineComponent({
+  props: {
+    a: {
+      type: [String, Number, Boolean, Function] as const,
+    },
+  },
+})
+const c = {
+  props: {
+    a: {
+      type: [String, Number, Boolean, Function] as const,
+    },
+  },
+}
