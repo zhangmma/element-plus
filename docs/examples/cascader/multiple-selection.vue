@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-const props = { multiple: true }
+const props = { multiple: true,checkStrictly: true, }
 
 const options = [
   {
